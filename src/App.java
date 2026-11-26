@@ -1,42 +1,32 @@
 public class App {
     public static void main(String[] args) throws Exception {
-     Inventario inventario = Inventario.getInstancia();
+        Inventario inventario = Inventario.getInstancia();
 
-        // Carga de inventario inicial
+        // Carga de inventario inicial (Consumible ya no lleva el valor booleano 'true')
         inventario.agregarElemento(new EquipoComputo("EQ-01", "Laptop Pro", 15000.0, 10, "Dell"));
-        inventario.agregarElemento(new Consumible("CS-01", "Tóner Negro", 800.0, 20, true));
+        inventario.agregarElemento(new Consumible("CS-01", "Tóner Negro", 800.0, 20));
         inventario.agregarElemento(new LicenciaDigital("LC-01", "Windows 11 Pro", 2500.0, 15, 12));
 
         System.out.println("=== CASO DE PRUEBA: COMPETENCIA POR UN RECURSO Y CONSULTAS CONCURRENTES ===");
         System.out.println("Estado Inicial: EQ-01 tiene 10 unidades disponibles.\n");
 
-        // Hilos de retiro compitiendo por 7 unidades de EQ-01
-        Thread h1 = new Thread(() -> {
-            SalidaInventarioVisitor v = new SalidaInventarioVisitor("EQ-01", 7);
-            inventario.aplicarVisitor(v);
-            System.out.println("[Hilo-1 (Retiro)] " + v.getMensaje());
-        });
+        // Instanciamos los clientes que realizarán las peticiones
+        Cliente cliente1 = new Cliente("Cliente 1 (José)", "CS-01", 7, "RETIRO");
+        Cliente cliente2 = new Cliente("Cliente 2 (María)", "EQ-01", 7, "RETIRO");
+        Cliente proveedor = new Cliente("Proveedor (HP)", "CS-01", 10, "ENTRADA");
 
-        Thread h2 = new Thread(() -> {
-            SalidaInventarioVisitor v = new SalidaInventarioVisitor("EQ-01", 7);
-            inventario.aplicarVisitor(v);
-            System.out.println("[Hilo-2 (Retiro)] " + v.getMensaje());
-        });
+        // Hilos para ejecutar las peticiones de los clientes concurrentemente
+        Thread h1 = new Thread(cliente1);
+        Thread h2 = new Thread(cliente2);
+        Thread h4 = new Thread(proveedor);
 
-        // Hilo de consulta / reporte
+        // Hilo de consulta / reporte del sistema
         Thread h3 = new Thread(() -> {
             ReporteInventarioVisitor v = new ReporteInventarioVisitor();
             inventario.aplicarVisitor(v);
-            System.out.println("\n--- [Hilo-3] REPORTE DE INVENTARIO ---");
+            System.out.println("\n--- [Sistema] REPORTE DE INVENTARIO ---");
             System.out.println(v.obtenerReporte());
             System.out.println("----------------------------------------\n");
-        });
-
-        // Hilo de entrada de mercancía
-        Thread h4 = new Thread(() -> {
-            EntradaInventarioVisitor v = new EntradaInventarioVisitor("CS-01", 10);
-            inventario.aplicarVisitor(v);
-            System.out.println("[Hilo-4 (Entrada)] Entrada agregada a CS-01.");
         });
 
         // Inicio de hilos simultáneos
@@ -45,7 +35,7 @@ public class App {
         h3.start();
         h4.start();
 
-        // Espera de finalización
+        // Espera a que finalicen todos los hilos
         h1.join();
         h2.join();
         h3.join();

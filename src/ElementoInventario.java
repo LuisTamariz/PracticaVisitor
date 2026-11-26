@@ -11,11 +11,21 @@ public abstract class ElementoInventario {
         this.cantidad = cantidad;
     }
 
-    public String getIdElemento() { return idElemento; }
-    public String getNombre() { return nombre; }
-    public double getPrecioUnitario() { return precioUnitario; }
-    public int getCantidad() { return cantidad; }
-    public void setCantidad(int cantidad) { this.cantidad = cantidad; }
+    public String getIdElemento() {
+         return idElemento; 
+        }
+    public String getNombre() {
+         return nombre; 
+        }
+    public double getPrecioUnitario() {
+         return precioUnitario; 
+        }
+    public int getCantidad() {
+         return cantidad;
+         }
+    public void setCantidad(int cantidad) {
+         this.cantidad = cantidad; 
+        }
 // Método de entrada para el patrón Visitor
     public abstract void accept(Visitor visitor);
 }

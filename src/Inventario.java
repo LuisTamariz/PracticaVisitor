@@ -36,7 +36,7 @@ public class Inventario {
             lockInventario.unlock();
         }
     }
-// Garantiza acceso exclusivo al aplicar el visitante sobre la colecció
+// Garantiza acceso exclusivo al aplicar el visitante sobre la coleccion
     public void aplicarVisitor(Visitor visitor) {
         lockInventario.lock();
         try {

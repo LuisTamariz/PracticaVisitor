@@ -16,12 +16,11 @@ public class ReporteInventarioVisitor implements Visitor {
         lineasReporte.add(linea);
     }
 
-    @Override
+   @Override
     public void visit(Consumible consumible) {
-        String linea = String.format("[CONSUMIBLE] ID: %s | Nombre: %s | Reordenable: %s | Cantidad: %d | Precio U.: $%.2f",
+        String linea = String.format("[CONSUMIBLE] ID: %s | Nombre: %s | Cantidad: %d | Precio U.: $%.2f",
                 consumible.getIdElemento(),
                 consumible.getNombre(),
-                consumible.isReordenable() ? "Sí" : "No",
                 consumible.getCantidad(),
                 consumible.getPrecioUnitario());
         lineasReporte.add(linea);
